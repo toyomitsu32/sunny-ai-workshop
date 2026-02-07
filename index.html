@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunny AI Workshop - 中小企業のAI自走支援</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "ink": "#1a1a1a",
+                        "ink-light": "#333333",
+                        "ink-muted": "#666666",
+                        "paper": "#fefefe",
+                        "paper-warm": "#faf8f5",
+                        "paper-dark": "#f5f3f0",
+                        "accent": "#c41e3a",
+                        "accent-light": "#e8d4d8",
+                        "moss": "#2d4a3e",
+                        "moss-light": "#e8eeeb"
+                    },
+                    fontFamily: {
+                        "serif": ["Noto Serif JP", "serif"],
+                        "sans": ["Noto Sans JP", "sans-serif"]
+                    },
+                    fontSize: {
+                        "display": ["clamp(2.5rem, 5vw, 4rem)", { lineHeight: "1.2", letterSpacing: "-0.02em" }],
+                        "title": ["clamp(1.75rem, 3vw, 2.5rem)", { lineHeight: "1.3", letterSpacing: "-0.01em" }],
+                        "body-lg": ["1.125rem", { lineHeight: "1.8" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-feature-settings: "palt";
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* 繊細なシャドウ - 本物の立体感 */
+        .shadow-soft {
+            box-shadow:
+                0 1px 2px rgba(0,0,0,0.04),
+                0 4px 8px rgba(0,0,0,0.04),
+                0 16px 32px rgba(0,0,0,0.04);
+        }
+        .shadow-elevated {
+            box-shadow:
+                0 2px 4px rgba(0,0,0,0.02),
+                0 8px 16px rgba(0,0,0,0.06),
+                0 24px 48px rgba(0,0,0,0.06);
+        }
+
+        /* カードのホバー */
+        .card-hover {
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                        box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 4px 8px rgba(0,0,0,0.04),
+                0 12px 24px rgba(0,0,0,0.08),
+                0 32px 64px rgba(0,0,0,0.08);
+        }
+
+        /* 縦書き風アクセント */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        /* 和紙風テクスチャ */
+        .texture-paper {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            background-blend-mode: soft-light;
+            background-size: 200px;
+        }
+
+        /* 微細なノイズテクスチャ */
+        .bg-noise {
+            position: relative;
+        }
+        .bg-noise::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        /* 洗練された円形装飾 */
+        .bg-circle-accent {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 流れるような曲線 */
+        .bg-curve {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        /* 細い斜線パターン */
+        .bg-lines {
+            background-image: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 40px,
+                rgba(26, 26, 26, 0.02) 40px,
+                rgba(26, 26, 26, 0.02) 41px
+            );
+        }
+
+        /* 格子パターン（控えめ） */
+        .bg-grid-subtle {
+            background-image:
+                linear-gradient(rgba(26, 26, 26, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26, 26, 26, 0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* ドットパターン */
+        .bg-dots {
+            background-image: radial-gradient(circle, rgba(26, 26, 26, 0.04) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* グラデーションオーバーレイ */
+        .bg-gradient-warm {
+            background: linear-gradient(180deg, rgba(250, 248, 245, 0) 0%, rgba(250, 248, 245, 0.8) 100%);
+        }
+        .bg-gradient-fade {
+            background: radial-gradient(ellipse at 50% 0%, rgba(196, 30, 58, 0.03) 0%, transparent 60%);
+        }
+
+        /* インクセクション用の装飾 */
+        .bg-ink-texture {
+            background-image:
+                radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(255, 255, 255, 0.015) 0%, transparent 50%);
+        }
+
+        /* 品のある下線 */
+        .underline-accent {
+            position: relative;
+            display: inline;
+        }
+        .underline-accent::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0.1em;
+            width: 100%;
+            height: 0.35em;
+            background: rgba(196, 30, 58, 0.15);
+            z-index: -1;
+        }
+
+        /* 余白の呼吸 */
+        .section-breathing {
+            padding-top: clamp(4rem, 10vw, 8rem);
+            padding-bottom: clamp(4rem, 10vw, 8rem);
+        }
+
+        /* フェードインアニメーション */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        @keyframes drawLine {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* アニメーションクラス */
+        .animate-fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .animate-fade-in-left {
+            animation: fadeInLeft 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .animate-fade-in-right {
+            animation: fadeInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .animate-scale-in {
+            animation: scaleIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* スクロール連動アニメーション用 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ディレイ */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
+
+        /* 洗練されたホバー */
+        .hover-slide {
+            position: relative;
+            overflow: hidden;
+        }
+        .hover-slide::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .hover-slide:hover::after {
+            width: 100%;
+        }
+
+        /* ボタンの洗練されたホバー */
+        .btn-hover {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease;
+        }
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .btn-hover:hover::before {
+            left: 100%;
+        }
+
+        /* スムーズなカード */
+        .card-smooth {
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .card-smooth:hover {
+            transform: translateY(-4px);
+        }
+
+        /* 数字のカウントアップ用 */
+        .count-up {
+            display: inline-block;
+        }
+
+        /* マーキー効果 */
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+        }
+
+        /* パルス効果 */
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+        .animate-pulse-dot {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+    </style>
+
+<link rel="stylesheet" href="/index.css">
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/sunny-ai-workshop/assets/index-BBG1F0J5.js"></script>
+</head>
+<body class="bg-paper text-ink font-sans antialiased">
+    <div id="root"></div>
+</body>
+</html>
